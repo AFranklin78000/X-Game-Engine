@@ -7,7 +7,7 @@
 
 #include "xge/logger.h"
 
-void ThrowException(const char *msg) {
+void ThrowException(const char* msg) {
     time_t tt = time(&tt);
     const tm* ti = localtime(&tt);
 
@@ -19,7 +19,7 @@ void ThrowException(const char *msg) {
     throw std::runtime_error(msg);
 }
 
-void ThrowException(const char *msg_a, const char *msg_b) {
+void ThrowException(const char* msg_a, const char* msg_b) {
     time_t tt = time(&tt);
     const tm* ti = localtime(&tt);
 
