@@ -7,6 +7,8 @@
 
 void OPEN_LOG();
 void LOG(const char* sender, const char* message);
+void LOG_CONSOLE_ONLY(const char* sender, const char* message);
+void LOG_FILE_ONLY(const char* sender, const char* message);
 void CLOSE_LOG();
 void LOG_STATISTICS(bool a);
 

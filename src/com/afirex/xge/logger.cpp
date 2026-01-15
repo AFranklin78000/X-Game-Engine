@@ -73,9 +73,45 @@ void LOG(const char* sender, const char* message) {
             std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch());
 
         std::cout << "^(MemUsage: " << usage.ru_maxrss  << " KB), (Time since previous: "
-            << (nanoseconds.count()-lastLog) << "ns)" << std::endl;
+            << (nanoseconds.count()-lastLog) << "ns, "
+            << (static_cast<double>(nanoseconds.count() - lastLog)/1000000.0) << "ms)" << std::endl;
         lastLog = nanoseconds.count();
     }
+}
+
+void LOG_CONSOLE_ONLY(const char* sender, const char* message) {
+    time_t tt = time(&tt);
+    const tm* ti = localtime(&tt);
+
+    char buffer[32];
+    strftime(buffer, sizeof(buffer), "%m/%d/%Y %H:%M:%S", ti);
+
+    std::cout << "[" << buffer << "] <" << sender << "> " << message << std::endl;
+
+    if (log_statistics) {
+        rusage usage{};
+        getrusage(RUSAGE_SELF, &usage);
+        const auto now =
+            std::chrono::system_clock::now();
+        const auto nanoseconds =
+            std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch());
+
+        std::cout << "^(MemUsage: " << usage.ru_maxrss  << " KB), (Time since previous: "
+            << (nanoseconds.count()-lastLog) << "ns, "
+            << (static_cast<double>(nanoseconds.count() - lastLog)/1000000.0) << "ms)" << std::endl;
+        lastLog = nanoseconds.count();
+    }
+}
+
+void LOG_FILE_ONLY(const char* sender, const char* message) {
+    time_t tt = time(&tt);
+    const tm* ti = localtime(&tt);
+
+    char buffer[32];
+    strftime(buffer, sizeof(buffer), "%m/%d/%Y %H:%M:%S", ti);
+
+    logfile << "[" << buffer << "] <" << sender << "> " << message << std::endl;
+    latestfile << "[" << buffer << "] <" << sender << "> " << message << std::endl;
 }
 
 void CLOSE_LOG() {
